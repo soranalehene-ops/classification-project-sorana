@@ -1,0 +1,32 @@
+2026-03-22 20:45:01,112 INFO:Notebook run started.
+2026-03-22 20:45:01,113 INFO:Global seed set to 42.
+2026-03-22 20:45:01,118 INFO:Saved preprocessing_config.json.
+2026-03-22 20:45:02,004 INFO:Created working copy of raw dataframe.
+2026-03-22 20:45:02,006 INFO:Stripped whitespace from column names.
+2026-03-22 20:45:02,019 INFO:Replaced placeholder missing values with NaN.
+2026-03-22 20:45:02,022 INFO:Dropped column: id
+2026-03-22 20:45:02,025 INFO:Converted target column Depression to numeric Int64.
+2026-03-22 20:45:02,027 INFO:Converted column to numeric: Age
+2026-03-22 20:45:02,029 INFO:Converted column to numeric: Academic Pressure
+2026-03-22 20:45:02,030 INFO:Converted column to numeric: Work Pressure
+2026-03-22 20:45:02,031 INFO:Converted column to numeric: CGPA
+2026-03-22 20:45:02,033 INFO:Converted column to numeric: Study Satisfaction
+2026-03-22 20:45:02,034 INFO:Converted column to numeric: Job Satisfaction
+2026-03-22 20:45:02,036 INFO:Converted column to numeric: Work/Study Hours
+2026-03-22 20:45:02,040 INFO:Converted column to numeric: Financial Stress
+2026-03-22 20:45:02,051 INFO:Generated missing value summary.
+2026-03-22 20:45:02,054 INFO:Missing values detected in Financial Stress: 3 rows (0.01%).
+2026-03-22 20:45:02,083 INFO:Grouped rare categories in City: unique values reduced after applying threshold 0.01.
+2026-03-22 20:45:02,094 INFO:Grouped rare categories in Degree: unique values reduced after applying threshold 0.01.
+2026-03-22 20:45:02,098 INFO:Grouped rare categories in Profession: unique values reduced from 14 to 2.
+2026-03-22 20:45:02,124 INFO:Performed train-test split with test_size=0.20 and random_state=42.
+2026-03-22 20:45:02,125 INFO:X_train shape: (22320, 16), X_test shape: (5581, 16)
+2026-03-22 20:45:02,127 INFO:y_train distribution: {1: 0.5855, 0: 0.4145}
+2026-03-22 20:45:02,128 INFO:y_test distribution: {1: 0.5856, 0: 0.4144}
+2026-03-22 20:45:02,131 INFO:Numeric columns used in pipeline: ['Age', 'Academic Pressure', 'Work Pressure', 'CGPA', 'Study Satisfaction', 'Job Satisfaction', 'Work/Study Hours', 'Financial Stress']
+2026-03-22 20:45:02,132 INFO:Categorical columns used in pipeline: ['Gender', 'City', 'Profession', 'Sleep Duration', 'Dietary Habits', 'Degree', 'Have you ever had suicidal thoughts ?', 'Family History of Mental Illness']
+2026-03-22 20:45:02,214 INFO:Fitted preprocessing pipeline on training data only.
+2026-03-22 20:45:02,216 INFO:Processed X_train shape: [logged at runtime]
+2026-03-22 20:45:02,217 INFO:Processed X_test shape: [logged at runtime]
+2026-03-22 20:45:02,218 INFO:Assertion passed: transformed train and test have same number of columns.
+2026-03-22 20:45:02,220 INFO:Feature engineering and preprocessing completed successfully.
