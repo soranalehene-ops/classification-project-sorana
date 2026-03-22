@@ -1,0 +1,155 @@
+project:
+  name: student_depression_classification
+  target: Depression
+  task_type: binary_classification
+
+data_source:
+  file_name: classification.csv
+  original_shape:
+    rows: 27901
+    columns: 18
+
+feature_handling:
+  drop_columns:
+    - id
+  rationale:
+    id: "Identifier only; no predictive meaning and may introduce noise."
+
+missing_value_processing:
+  raw_missing_check:
+    explicit_nulls_detected: false
+    note: "Initial null scan returned 0 missing values in all columns."
+  placeholder_values_treated_as_missing:
+    - "?"
+    - " ?"
+    - ""
+    - "NA"
+    - "N/A"
+    - "na"
+    - "null"
+
+missingness_assessment:
+  Financial Stress:
+    missing_count: 3
+    missing_percent: 0.01
+    original_dtype: object
+    final_dtype: numeric
+    suspected_missingness_type: MNAR
+    rationale: >
+      Missing values appeared as '?' in a self-reported sensitive variable.
+      Non-response may reflect discomfort, uncertainty, or reluctance to disclose
+      financial stress, so the absence itself may carry signal.
+    chosen_strategy_primary:
+      method: median_imputation_plus_missing_indicator
+      imputer_scope: numeric
+      indicator_column: Financial Stress_missing
+      rationale: >
+        Median imputation is stable for an ordinal stress variable with very low
+        missingness, while the indicator preserves possible predictive value of
+        non-response.
+    advanced_strategy_tested:
+      method: knn_imputation
+      n_neighbors: 3
+      features_used:
+        - Age
+        - Academic Pressure
+        - CGPA
+        - Study Satisfaction
+        - Work/Study Hours
+        - Financial Stress
+      rationale: >
+        KNN imputation is appropriate if Financial Stress is correlated with other
+        student well-being and workload variables. It is tested as an alternative
+        to assess whether local feature similarity improves downstream performance.
+    model_comparison_requirement: >
+      Compare baseline preprocessing against median+indicator and KNN imputation
+      using the same train-test split and evaluation metrics.
+
+  other_features:
+    status: "No confirmed missing values after cleaning."
+    action: "No imputation currently applied."
+    note: >
+      If additional missing values are discovered later, each feature should be
+      assigned a missingness type and strategy separately.
+
+encoding:
+  ordinal_features:
+    Academic Pressure:
+      type: ordinal_numeric
+      rationale: "Higher values reflect greater pressure and showed monotonic relationship with target."
+    Financial Stress:
+      type: ordinal_numeric
+      rationale: "Stress scale is ordered and should remain numeric after cleaning."
+    Study Satisfaction:
+      type: ordinal_numeric
+      rationale: "Satisfaction levels are ordered."
+    Job Satisfaction:
+      type: ordinal_numeric
+      rationale: "Satisfaction levels are ordered."
+  nominal_features:
+    - Gender
+    - City
+    - Profession
+    - Sleep Duration
+    - Dietary Habits
+    - Degree
+    - Have you ever had suicidal thoughts ?
+    - Family History of Mental Illness
+  nominal_encoding:
+    method: one_hot_encoding
+    handle_unknown: ignore
+
+rare_category_grouping:
+  enabled: true
+  min_frequency: 0.01
+  columns:
+    - City
+    - Degree
+    - Profession
+  other_label: Other
+  rationale: >
+    Reduces sparsity after one-hot encoding and limits the impact of very rare categories.
+
+scaling:
+  method: standard_scaler
+  apply_to:
+    - Age
+    - Academic Pressure
+    - Work Pressure
+    - CGPA
+    - Study Satisfaction
+    - Job Satisfaction
+    - Work/Study Hours
+    - Financial Stress
+  rationale: >
+    Standardization is useful for scale-sensitive models such as logistic regression
+    and ensures preprocessing can be reused consistently.
+
+train_test_split:
+  test_size: 0.20
+  random_state: 42
+  stratify: true
+  rationale: "Preserves class proportions because the target is moderately imbalanced."
+
+ethics_flags:
+  sensitive_features:
+    - Have you ever had suicidal thoughts ?
+    - Family History of Mental Illness
+    - Financial Stress
+  note: >
+    These variables may be highly predictive but also ethically sensitive.
+    Performance should be compared with and without target-proximal features.
+
+evaluation_plan:
+  primary_metrics:
+    - accuracy
+    - precision
+    - recall
+    - f1
+    - roc_auc
+  imputation_comparison:
+    required: true
+    compare:
+      - baseline_simple_imputation
+      - median_plus_missing_indicator
+      - knn_imputation
